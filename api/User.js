@@ -4,12 +4,12 @@ const router = express.Router();
 // mongodb user model
 const User = require("./../models/User");
 
-// Обработчик паролей
+// Password handler
 const bcrypt = require("bcrypt");
 
 // Signup
 router.post("/signup", (req, res) => {
-  let {name, email, password, dateOfBirth } = req.body;
+  let { name, email, password, dateOfBirth } = req.body;
   name = name.trim();
   email = email.trim();
   password = password.trim();
@@ -17,43 +17,43 @@ router.post("/signup", (req, res) => {
 
   if (name == "" || email == "" || password == "" || dateOfBirth == "") {
     res.json({
-      status: "Ошибка",
-      message: "Пустые поля ввода!",
+      status: "FAILED",
+      message: "Empty input fields!",
     });
   } else if (!/^[a-zA-Z ]*$/.test(name)) {
     res.json({
-      status: "Ошибка",
-      message: "Введено неверное имя",
+      status: "FAILED",
+      message: "Invalid name entered",
     });
-  } else if (/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,4}$/.test(email)) {
+  } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
     res.json({
-      status: "Ошибка",
-      message: "Введен неверный почтовый адрес",
+      status: "FAILED",
+      message: "Invalid email entered",
     });
   } else if (!new Date(dateOfBirth).getTime()) {
     res.json({
-      status: "Ошибка",
-      message: "Введена неверная дата рождения",
+      status: "FAILED",
+      message: "Invalid date of birth entered",
     });
   } else if (password.length < 8) {
     res.json({
-      status: "Ошибка",
-      message: "Пароль слишком короткий!",
+      status: "FAILED",
+      message: "Password is too short!",
     });
   } else {
-    // Проверка, существует ли уже пользователь
+    // Checking if user already exists
     User.find({ email })
       .then((result) => {
         if (result.length) {
-          // Пользователь уже существует
+          // A user already exists
           res.json({
-            status: "Ошибка",
-            message: "Пользователь с предоставленным электронным адресом уже существует",
+            status: "FAILED",
+            message: "User with the provided email already exists",
           });
         } else {
-          // Попробуйте создать нового пользователя
+          // Try to create new user
 
-          // обработка паролей
+          // password handling
           const saltRounds = 10;
           bcrypt
             .hash(password, saltRounds)
@@ -69,22 +69,22 @@ router.post("/signup", (req, res) => {
                 .save()
                 .then((result) => {
                   res.json({
-                    status: "Успех",
-                    message: "Регистрация прошла успешно",
+                    status: "SUCCESS",
+                    message: "Signup successful",
                     data: result,
                   });
                 })
                 .catch((err) => {
                   res.json({
-                    status: "Ошибка",
-                    message: "Произошла ошибка при сохранении учетной записи пользователя!",
+                    status: "FAILED",
+                    message: "An error occurred while saving user account!",
                   });
                 });
             })
             .catch((err) => {
               res.json({
-                status: "Ошибка",
-                message: "Произошла ошибка при хэшировании пароля!",
+                status: "FAILED",
+                message: "An error occurred while hashing password!",
               });
             });
         }
@@ -92,8 +92,8 @@ router.post("/signup", (req, res) => {
       .catch((err) => {
         console.log(err);
         res.json({
-          status: "Ошибка",
-          message: "Произошла ошибка при проверке существующего пользователя!",
+          status: "FAILED",
+          message: "An error occurred while checking for existing user!",
         });
       });
   }
@@ -107,54 +107,55 @@ router.post("/signin", (req, res) => {
 
   if (email == "" || password == "") {
     res.json({
-      status: "Ошибка",
-      message: "Предоставленные пустые учетные данные",
+      status: "FAILED",
+      message: "Empty credentials supplied",
     });
   } else {
-    // Проверьте, существует ли пользователь
+    // Check if user exist
     User.find({ email })
       .then((data) => {
         if (data.length) {
-          // Пользователь существует
+          // User exists
 
           const hashedPassword = data[0].password;
           bcrypt
             .compare(password, hashedPassword)
             .then((result) => {
               if (result) {
-                // Совпадение пароля
+                // Password match
                 res.json({
-                  status: "Успех",
-                  message: "Регистрация прошла успешно",
+                  status: "SUCCESS",
+                  message: "Signin successful",
                   data: data,
                 });
               } else {
                 res.json({
-                  status: "Ошибка",
-                  message: "Введен неверный пароль!",
+                  status: "FAILED",
+                  message: "Invalid password entered!",
                 });
               }
             })
             .catch((err) => {
               res.json({
-                status: "Ошибка",
-                message: "При сравнении паролей произошла ошибка",
+                status: "FAILED",
+                message: "An error occurred while comparing passwords",
               });
             });
         } else {
           res.json({
-            status: "Ошибка",
-            message: "Введены неверные учетные данные!",
+            status: "FAILED",
+            message: "Invalid credentials entered!",
           });
         }
       })
       .catch((err) => {
         res.json({
-          status: "Ошибка",
-          message: "Произошла ошибка при проверке существующего пользователя",
+          status: "FAILED",
+          message: "An error occurred while checking for existing user",
         });
       });
   }
 });
 
 module.exports = router;
+
