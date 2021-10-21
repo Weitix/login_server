@@ -14,7 +14,7 @@ app.use(bodyParser());
 const cors = require("cors");
 app.use(cors());
 
-app.use("/user", UserRouter);
+app.use("user", UserRouter);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
