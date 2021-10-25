@@ -17,28 +17,28 @@ router.post("/signup", (req, res) => {
 
   if (name == "" || email == "" || password == "" || dateOfBirth == "") {
     res.json({
-      status: "FAILED",
-      message: "Empty input fields!",
+      status: "ошибка",
+      message: "Пустые поля ввода!",
     });
   } else if (!/^[a-zA-Z ]*$/.test(name)) {
     res.json({
-      status: "FAILED",
-      message: "Invalid name entered",
+      status: "ошибка",
+      message: "Введено неверное имя",
     });
   } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
     res.json({
-      status: "FAILED",
-      message: "Invalid email entered",
+      status: "ошибка",
+      message: "Введенный неверный адрес электронной почты",
     });
   } else if (!new Date(dateOfBirth).getTime()) {
     res.json({
-      status: "FAILED",
-      message: "Invalid date of birth entered",
+      status: "ошибка",
+      message: "Введена неверная дата рождения",
     });
   } else if (password.length < 8) {
     res.json({
-      status: "FAILED",
-      message: "Password is too short!",
+      status: "ошибка",
+      message: "Пароль слишком короткий!",
     });
   } else {
     // Checking if user already exists
@@ -47,8 +47,8 @@ router.post("/signup", (req, res) => {
         if (result.length) {
           // A user already exists
           res.json({
-            status: "FAILED",
-            message: "User with the provided email already exists",
+            status: "ошибка",
+            message: "Пользователь с предоставленным электронным адресом уже существует",
           });
         } else {
           // Try to create new user
@@ -69,22 +69,22 @@ router.post("/signup", (req, res) => {
                 .save()
                 .then((result) => {
                   res.json({
-                    status: "SUCCESS",
-                    message: "Signup successful",
+                    status: "успех",
+                    message: "Регистрация прошла успешно",
                     data: result,
                   });
                 })
                 .catch((err) => {
                   res.json({
-                    status: "FAILED",
-                    message: "An error occurred while saving user account!",
+                    status: "ошибка",
+                    message: "Произошла ошибка при сохранении учетной записи пользователя!",
                   });
                 });
             })
             .catch((err) => {
               res.json({
-                status: "FAILED",
-                message: "An error occurred while hashing password!",
+                status: "ошибка",
+                message: "Произошла ошибка при хэшировании пароля!",
               });
             });
         }
@@ -92,8 +92,8 @@ router.post("/signup", (req, res) => {
       .catch((err) => {
         console.log(err);
         res.json({
-          status: "FAILED",
-          message: "An error occurred while checking for existing user!",
+          status: "ошибка",
+          message: "Произошла ошибка при проверке существующего пользователя!",
         });
       });
   }
@@ -107,8 +107,8 @@ router.post("/signin", (req, res) => {
 
   if (email == "" || password == "") {
     res.json({
-      status: "FAILED",
-      message: "Empty credentials supplied",
+      status: "ошибка",
+      message: "Предоставленные пустые учетные данные",
     });
   } else {
     // Check if user exist
@@ -124,34 +124,34 @@ router.post("/signin", (req, res) => {
               if (result) {
                 // Password match
                 res.json({
-                  status: "SUCCESS",
-                  message: "Signin successful",
+                  status: "успех",
+                  message: "Успешная регистрация",
                   data: data,
                 });
               } else {
                 res.json({
-                  status: "FAILED",
-                  message: "Invalid password entered!",
+                  status: "ошибка",
+                  message: "Введен неверный пароль!",
                 });
               }
             })
             .catch((err) => {
               res.json({
-                status: "FAILED",
-                message: "An error occurred while comparing passwords",
+                status: "ошибка",
+                message: "При сравнении паролей произошла ошибка",
               });
             });
         } else {
           res.json({
-            status: "FAILED",
-            message: "Invalid credentials entered!",
+            status: "ошибка",
+            message: "Введенные неверные учетные данные!",
           });
         }
       })
       .catch((err) => {
         res.json({
-          status: "FAILED",
-          message: "An error occurred while checking for existing user",
+          status: "ошибка",
+          message: "Произошла ошибка при проверке существующего пользователя",
         });
       });
   }
