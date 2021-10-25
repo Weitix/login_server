@@ -71,7 +71,6 @@ router.post("/signup", (req, res) => {
                   res.json({
                     status: "SUCCESS",
                     message: "Signup successful",
-                    data: result,
                   });
                 })
                 .catch((err) => {
@@ -126,7 +125,6 @@ router.post("/signin", (req, res) => {
                 res.json({
                   status: "SUCCESS",
                   message: "Signin successful",
-                  data: data,
                 });
               } else {
                 res.json({
@@ -158,4 +156,3 @@ router.post("/signin", (req, res) => {
 });
 
 module.exports = router;
-
