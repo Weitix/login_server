@@ -9,13 +9,12 @@ const bcrypt = require("bcrypt");
 
 // Signup
 router.post("/signup", (req, res) => {
-  let { name, email, password, dateOfBirth } = req.body;
+  let { name, email, password} = req.body;
   name = name.trim();
   email = email.trim();
   password = password.trim();
-  dateOfBirth = dateOfBirth.trim();
 
-  if (name == "" || email == "" || password == "" || dateOfBirth == "") {
+  if (name == "" || email == "" || password == "" ) {
     res.json({
       status: "ошибка",
       message: "Пустые поля ввода!",
