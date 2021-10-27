@@ -30,12 +30,7 @@ router.post("/signup", (req, res) => {
       status: "ошибка",
       message: "Введенный неверный адрес электронной почты",
     });
-  } else if (!new Date(dateOfBirth).getTime()) {
-    res.json({
-      status: "ошибка",
-      message: "Введена неверная дата рождения",
-    });
-  } else if (password.length < 8) {
+  }  else if (password.length < 8) {
     res.json({
       status: "ошибка",
       message: "Пароль слишком короткий!",
