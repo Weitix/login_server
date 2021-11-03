@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // mongodb user model
-const Role = require("./../models/Role");
+const Role = require("./../models/Role")
 const User = require("./../models/User");
 
 
@@ -15,7 +15,7 @@ router.post("/signup", (req, res) => {
   name = name.trim();
   email = email.trim();
   password = password.trim();
-  roles = roles
+  roles = Role;
 
   if (name == "" || email == "" || password == "" || roles == "") {
     res.json({
