@@ -15,7 +15,7 @@ router.post("/signup", (req, res) => {
   name = name.trim();
   email = email.trim();
   password = password.trim();
-  roles
+  roles = roles
 
   if (name == "" || email == "" || password == "" || roles == "") {
     res.json({
