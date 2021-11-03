@@ -2,20 +2,22 @@ const express = require("express");
 const router = express.Router();
 
 // mongodb user model
-const User = require("./../models/User");
 const Role = require("./../models/Role");
+const User = require("./../models/User");
 
-// Password handler
+
+// Обработчик паролей
 const bcrypt = require("bcrypt");
 
 // Signup
 router.post("/signup", (req, res) => {
-  let { name, email, password} = req.body;
+  let { name, email, password, roles} = req.body;
   name = name.trim();
   email = email.trim();
   password = password.trim();
+  roles
 
-  if (name == "" || email == "" || password == "" ) {
+  if (name == "" || email == "" || password == "" || roles == "") {
     res.json({
       status: "ошибка",
       message: "Пустые поля ввода!",
@@ -36,19 +38,19 @@ router.post("/signup", (req, res) => {
       message: "Пароль слишком короткий!",
     });
   } else {
-    // Checking if user already exists
+    // Проверка, существует ли уже пользователь
     User.find({ email })
       .then((result) => {
         if (result.length) {
-          // A user already exists
+          // Пользователь уже существует
           res.json({
             status: "ошибка",
             message: "Пользователь с предоставленным электронным адресом уже существует",
           });
         } else {
-          // Try to create new user
+          // Попробуйте создать нового пользователя
 
-          // password handling
+          // обработка паролей
           const saltRounds = 10;
           bcrypt
             .hash(password, saltRounds)
@@ -93,6 +95,7 @@ router.post("/signup", (req, res) => {
   }
 });
 
+
 // Signin
 router.post("/signin", (req, res) => {
   let { email, password } = req.body;
@@ -105,11 +108,11 @@ router.post("/signin", (req, res) => {
       message: "Предоставленные пустые учетные данные",
     });
   } else {
-    // Check if user exist
+    // Проверьте, существует ли пользователь
     User.find({ email })
       .then((data) => {
         if (data.length) {
-          // User exists
+          // Пользователь существует
 
           const hashedPassword = data[0].password;
           bcrypt
