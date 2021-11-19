@@ -8,6 +8,8 @@ const User = require("./../models/User");
 // Обработчик паролей
 const bcrypt = require("bcrypt");
 
+
+
 // Signup
 router.post("/signup", (req, res) => {
   let { name, email, password, roles} = req.body;
@@ -152,6 +154,10 @@ router.post("/signin", (req, res) => {
       });
   }
 });
+
+
+
+
 
 module.exports = router;
 
